@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.mapper.BoardMapper">
+<!-- 풀캐지로명으로 네임스페이스 변경 -->
+<!-- 컬럼명만기재 -->
+	<sql id="boardColumns">
+			  idx                               <!-- db처럼 스네이크명명 -->
+			, title
+			, content
+			, writer
+			, view_cnt
+			, notice_yn
+			, secret_yn
+			, delete_yn
+			, insert_time
+			, update_time
+			, delete_time
+	</sql>
+								<!-- 스프링에서는 풀패키지명이었다. -->
+	<insert id="insertBoard" parameterType="BoardDTO">
+		INSERT INTO tb_board (
+			<include refid="boardColumns" /> <!-- 참고하는 id는 위에 코드 -->
+		) VALUES (							 <!-- referenc id -->
+			  #{idx}                         <!-- 자바에서 넘어온 값에는 #{카멜케이스} -->
+			, #{title}
+			, #{content}
+			, #{writer}
+			, 0
+			, IFNULL(#{noticeYn}, 'N')
+			, IFNULL(#{secretYn}, 'N')
+			, 'N'
+			, NOW()
+			, NULL
+			, NULL
+		)
+	</insert>
+
+	<select id="selectBoardDetail" parameterType="long" resultType="BoardDTO">
+		SELECT
+			<include refid="boardColumns" />
+		FROM
+			tb_board
+		WHERE
+			delete_yn = 'N'
+		AND
+			idx = #{idx}
+	</select>
+
+	<update id="updateBoard" parameterType="BoardDTO">
+		UPDATE tb_board
+		SET
+			  update_time = NOW()
+			, title = #{title}
+			, content = #{content}
+			, writer = #{writer}
+			, notice_yn = IFNULL(#{noticeYn}, 'N')
+			, secret_yn = IFNULL(#{secretYn}, 'N')
+		WHERE
+			idx = #{idx}
+	</update>
+
+	<update id="deleteBoard" parameterType="long">
+		UPDATE tb_board
+		SET
+			  delete_yn = 'Y'
+			, delete_time = NOW()
+		WHERE
+			idx = #{idx}
+	</update>
+
+	<select id="selectBoardList" parameterType="BoardDTO" resultType="BoardDTO">
+		SELECT
+			<include refid="boardColumns" />
+		FROM
+			tb_board
+		WHERE
+			delete_yn = 'N'
+		ORDER BY
+			notice_yn ASC,
+			idx DESC,
+			insert_time DESC
+	</select>
+
+	<select id="selectBoardTotalCount" parameterType="BoardDTO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			tb_board
+		WHERE
+			delete_yn = 'N'
+	</select>
+
+
+
+</mapper>
