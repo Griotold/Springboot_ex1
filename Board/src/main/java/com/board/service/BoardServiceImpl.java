@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import com.board.domain.BoardDTO;
 import com.board.mapper.BoardMapper;
 
-@Service
+@Service //해당 클래스가 비즈니스 로직을 담당하는 서비스 클래스임을 나타냄
 public class BoardServiceImpl implements BoardService {
 
-	@Autowired
+	@Autowired //BoardMapper 인터페이스 빈을 주입
 	private BoardMapper boardMapper;
 
+	//insert와 update는 모두 데이터를 등록하기 때문에
+	//두 개의 메서드로 나누어 처리하지 않고
+	//idx(게시글 번호)의 유무를 기준으로 인서트 또는 업데이트
 	@Override
 	public boolean registerBoard(BoardDTO params) {
 		int queryResult = 0;
