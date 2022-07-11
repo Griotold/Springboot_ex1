@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.board.mapper.BoardMapper">
-<!-- 풀캐지로명으로 네임스페이스 변경 -->
-<!-- 컬럼명만기재 -->
+<!-- 풀캐지로명으로 네임스페이스 속성값 변경. BoardMapper인터페이스 -->
+<!-- 마이바티스에서 SQL 쿼리 문이 정의되어 있는 파일을 XML Mapper라고 한다. -->
+<!-- 네임스페이스는 XML Mapper의 SQL 쿼리 문과 Mapper 인터페이스의 메서드를 매핑하기 -->
+<!-- 위한 속성이다. -->
+
+<!-- 마이바티스 SELECT 컬럼과 DTO 멤버 변수 매핑하기 -->
+<!-- 매핑하려는데 xml파일에서는 스네이크 케이스, DTO클래스는 카멜케이스 -->
+<!-- 이 경우, application.properties에서 설정을 추가 해주면, -->
+<!-- mybatis.configuration.map-underscore-to-camel-case=true -->
+<!-- 자동으로 매핑해준다. -->
+
+<!-- 마이바티스는 sql태그를 이용해서 공통으로 사용되거나 -->
+<!-- 반복적으로 사용되는 SQL 조각을 정의할 수 있다. -->
+<!-- 부품화 -->
+<!-- 컬럼명이 모든 쿼리에서 반복되므로 컬럼명만 조각으로 만들어준다. -->
 	<sql id="boardColumns">
 			  idx                               <!-- db처럼 스네이크명명 -->
 			, title
@@ -19,6 +32,7 @@
 								<!-- 스프링에서는 풀패키지명이었다. -->
 	<insert id="insertBoard" parameterType="BoardDTO">
 		INSERT INTO tb_board (
+		<!-- sql태그에서 정의한 조각을 사용하겠다는 include태그 -->
 			<include refid="boardColumns" /> <!-- 참고하는 id는 위에 코드 -->
 		) VALUES (							 <!-- referenc id -->
 			  #{idx}                         <!-- 자바에서 넘어온 값에는 #{카멜케이스} -->
@@ -41,7 +55,7 @@
 		FROM
 			tb_board
 		WHERE
-			delete_yn = 'N'
+			delete_yn = 'N' <!-- 삭제가 안된 게시글을 가져와라 -->
 		AND
 			idx = #{idx}
 	</select>

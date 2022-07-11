@@ -44,6 +44,10 @@ public class DBConfiguration {
 		//SqlSessionFactoryBean은 마이바티스와 스프링의 연동 모듈로 사용
 		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
 		factoryBean.setDataSource(dataSource());
+		//아래 라인은 기존에 주석 처리 되어 있었으나. 해당 메서드는 getResources 메서드의
+		//인자로 지정된 패턴에 포함되는 XML Mapper를 인식하도록 하는 역할
+		//기존에는 XML Mapper가 없었지만, BoardMapper XML을 추가해줬으므로
+		//해당 파일을 인식할 수 있도록 주석이 해제시켰다.
 		factoryBean.setMapperLocations(applicationContext.getResources("classpath:/mappers/**/*Mapper.xml"));
 		factoryBean.setTypeAliasesPackage("com.board.domain"); //xml파일에서 풀패키지명을 안쓰도록
 		factoryBean.setConfiguration(mybatisConfg()); //아래 메소드 호출
