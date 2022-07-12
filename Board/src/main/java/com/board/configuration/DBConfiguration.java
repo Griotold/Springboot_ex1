@@ -28,7 +28,7 @@ public class DBConfiguration {
 	private ApplicationContext applicationContext;
 
 	@Bean //Configuration 클래스의 메소드 레벨에만 지정이 가능하다.
-	//prefix로 시작하즌ㄴ 설정을 모두 읽어 들여 해당 메소드에 매핑(바인딩)
+	//prefix로 시작하는 설정을 모두 읽어 들여 해당 메소드에 매핑(바인딩)
 	@ConfigurationProperties(prefix = "spring.datasource.hikari")
 	public HikariConfig hikariConfig() { //히카리CP 객체를 생성
 		return new HikariConfig();

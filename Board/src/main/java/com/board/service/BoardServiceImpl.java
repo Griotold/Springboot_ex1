@@ -20,6 +20,9 @@ public class BoardServiceImpl implements BoardService {
 	//idx(게시글 번호)의 유무를 기준으로 인서트 또는 업데이트
 	@Override
 	public boolean registerBoard(BoardDTO params) {
+		//queryResult 변수에 insertBoard 또는 updateBoard 메서드의 실행결과를
+		//저장한다. 각 메서드에서 호출한 쿼리가 정상적으로 실핼되면, 
+		//쿼리를 실행한 횟수 1이 저장.
 		int queryResult = 0;
 
 		//컨트롤러에서 넘어온 idx가 없다면 글쓰기 
