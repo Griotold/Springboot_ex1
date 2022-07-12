@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.board.constant.Method;
 import com.board.domain.BoardDTO;
 import com.board.service.BoardService;
-
+import com.board.util.UiUtils;
+//UiUtils를 상속함으로 공통의 것을 상속받는다.
 @Controller
-public class BoardController {
+public class BoardController extends UiUtils{
 
 	@Autowired
 	private BoardService boardService;
@@ -41,21 +43,22 @@ public class BoardController {
 		//앞에 프리픽스 붙고 뒤에 suffix(접미사) 붙고 
 		// 
 	}
+	//파라미터 model추가, 주석에 return추가
 	@PostMapping(value = "/board/register.do")
-	public String registerBoard(final BoardDTO params) {
+	public String registerBoard(final BoardDTO params, Model model) {
 		try {
 			boolean isRegistered = boardService.registerBoard(params);
-			if (isRegistered == false) {
-				// TODO => 게시글 등록에 실패하였다는 메시지를 전달
+			if (isRegistered == false) { //UiUtils를 상송받아서 리턴문 가능
+				return showMessageWithRedirect("게시글 등록에 실패하였습니다.", "/board/list.do", Method.GET, null, model);
 			}
 		} catch (DataAccessException e) {
-			// TODO => 데이터베이스 처리 과정에 문제가 발생하였다는 메시지를 전달
+			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/board/list.do", Method.GET, null, model);
 
 		} catch (Exception e) {
-			// TODO => 시스템에 문제가 발생하였다는 메시지를 전달
+			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/board/list.do", Method.GET, null, model);
 		}
 
-		return "redirect:/board/list.do";
+		return showMessageWithRedirect("게시글 등록이 완료되었습니다.", "/board/list.do", Method.GET, null, model);
 	}
 	
 	@GetMapping(value = "/board/list.do")
@@ -88,26 +91,26 @@ public class BoardController {
 	//삭제는 get요청이 아니라 post
 	//삭제는 크리티컬 하기 때문에 url로 요청을 때린다고 들어주면 곤란하다.
 	//post로 보안을 높여준다.
+	//파라미터 추가, 주석에 return 추가
 	@PostMapping(value = "/board/delete.do")
-	public String deleteBoard(@RequestParam(value = "idx", required = false) Long idx) {
+	public String deleteBoard(@RequestParam(value = "idx", required = false) Long idx, Model model) {
 		if (idx == null) {
-			// TODO => 올바르지 않은 접근이라는 메시지를 전달하고, 게시글 리스트로 리다이렉트
-			return "redirect:/board/list.do";
+			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/board/list.do", Method.GET, null, model);
 		}
 
 		try {
 			boolean isDeleted = boardService.deleteBoard(idx);
 			if (isDeleted == false) {
-				// TODO => 게시글 삭제에 실패하였다는 메시지를 전달
+				return showMessageWithRedirect("게시글 삭제에 실패하였습니다.", "/board/list.do", Method.GET, null, model);
 			}
 		} catch (DataAccessException e) {
-			// TODO => 데이터베이스 처리 과정에 문제가 발생하였다는 메시지를 전달
+			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/board/list.do", Method.GET, null, model);
 
 		} catch (Exception e) {
-			// TODO => 시스템에 문제가 발생하였다는 메시지를 전달
+			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/board/list.do", Method.GET, null, model);
 		}
 
-		return "redirect:/board/list.do";
+		return showMessageWithRedirect("게시글 삭제가 완료되었습니다.", "/board/list.do", Method.GET, null, model);
 	}
 	
 }
