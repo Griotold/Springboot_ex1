@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+	<!-- Appenders -->
+	<!-- 콘솔에 출력할건지, 파일에 저장할건지, 데이터베이스에 저장할건지 -->
+	<!-- 얘는 콘솔에 출력할건지 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d %5p [%c] %m%n</Pattern> <!-- 로그의 형식을 지정 -->
+			<!-- d = 시간
+			p = 레벨
+			c = 로거가 출력된 경로
+			m = 메시지
+			n = 개행문자 -->
+		</encoder>
+	</appender>
+
+	<appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d %5p %m%n</Pattern>
+		</encoder>
+	</appender>
+
+	<!-- Logger -->
+	<logger name="com.board" level="DEBUG" appender-ref="console" />
+	<logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog" />
+	<logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog" />
+
+	<!-- Root Logger -->
+	<root level="off">
+		<appender-ref ref="console" />
+	</root>
+</configuration>
