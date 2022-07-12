@@ -85,4 +85,29 @@ public class BoardController {
 		return "board/view";
 	}
 	
+	//삭제는 get요청이 아니라 post
+	//삭제는 크리티컬 하기 때문에 url로 요청을 때린다고 들어주면 곤란하다.
+	//post로 보안을 높여준다.
+	@PostMapping(value = "/board/delete.do")
+	public String deleteBoard(@RequestParam(value = "idx", required = false) Long idx) {
+		if (idx == null) {
+			// TODO => 올바르지 않은 접근이라는 메시지를 전달하고, 게시글 리스트로 리다이렉트
+			return "redirect:/board/list.do";
+		}
+
+		try {
+			boolean isDeleted = boardService.deleteBoard(idx);
+			if (isDeleted == false) {
+				// TODO => 게시글 삭제에 실패하였다는 메시지를 전달
+			}
+		} catch (DataAccessException e) {
+			// TODO => 데이터베이스 처리 과정에 문제가 발생하였다는 메시지를 전달
+
+		} catch (Exception e) {
+			// TODO => 시스템에 문제가 발생하였다는 메시지를 전달
+		}
+
+		return "redirect:/board/list.do";
+	}
+	
 }
